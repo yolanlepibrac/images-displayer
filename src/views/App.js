@@ -8,9 +8,9 @@ var AppContainer = require("./AppContainer")
 
 module.exports = {
     view: function(vnode) {
-        return m("form", [
+        return m("#App", [
             m(Header, {size:"50px", backgroundColor:Constantes.color, text:"Images Displayer"}),
-            m(AppContainer),
+            m(AppContainer)
         ])
     }
 }
