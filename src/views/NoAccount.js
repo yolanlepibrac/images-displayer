@@ -1,6 +1,7 @@
 
 var m = require("mithril")
-var DatabaseAPI = require("../API/DatabaseAPI")
+var DatabaseAPI = require("../API/DatabaseAPI");
+var State = require("./Global").state;
 
 var NoAccount = {
     current : {
@@ -18,17 +19,20 @@ var NoAccount = {
       this.current.password = password
     },
     validate: function(vnode){
+      console.log(this.current.username, this.current.password)
       if(this.current.username === "" ||  this.current.username === undefined || this.current.password === "" ||  this.current.password === undefined){
         return;
       }else{
         this.current.onLogin ?
-        DatabaseAPI.login(this.current.username, this.current.password).then(() => {
+        DatabaseAPI.login(this.current.username, this.current.password).then((data) => {
           if(data.status === 200){
+            State.connected = true;
             m.route.set("/connected", {connected:true});
           }
         }) :
-        DatabaseAPI.register(this.current.username, this.current.password).then(() => {
+        DatabaseAPI.signup(this.current.username, this.current.password).then((data) => {
           if(data.status === 200){
+            State.connected = true;
             m.route.set("/connected", {connected:true});
           }
         });

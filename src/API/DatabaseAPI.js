@@ -4,23 +4,22 @@ var m = require("mithril");
 const headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json',
-
 }
 
-const burl = ""
+const burl = "https://images-displayer.herokuapp.com"
+//const burl = "http://localhost:8000/"
 
 module.exports = {
-    login : function(email,password) {
-      console.log(email)
-        return axios.post(burl + '/user/login',{'email' : email,'password' : password},{headers: headers})
+    login : function(username,password) {
+        return axios.post(burl + '/user/login',{'username':username,'password':password},{headers: headers})
     },
-    signup : function(send){
-        return axios.post(burl + '/user/signup',send,{headers: headers})
+    signup : function(username,password){
+        return axios.post(burl + '/user/signup',{'username':username,'password':password},{headers: headers})
     },
-    addPicture: function(id, oldPassword, newPassword) {
-        return axios.post(burl + '/user/updatePassword',{'id' : id, 'oldPassword' : oldPassword, 'newPassword' : newPassword, },{headers: headers})
+    addPicture: function() {
+        return axios.post(burl + '/user/addPicture',{},{headers: headers})
     },
-    deletePicture: function(searchedText){
-        return axios.post(burl + '/user/searchFriends',{'userName':searchedText},{headers: headers})
+    deletePicture: function(){
+        return axios.post(burl + '/user/deletePicture',{},{headers: headers})
     },
 }
