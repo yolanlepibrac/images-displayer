@@ -1,6 +1,6 @@
-// src/views/App.js
+
 var m = require("mithril")
-var ConnectionInput = require("./ConnectionInput")
+var DatabaseAPI = require("../API/DatabaseAPI")
 
 var NoAccount = {
     current : {
@@ -11,60 +11,77 @@ var NoAccount = {
       onLogin:false,
       onRegister:false,
     },
-    setUsername: function(value) {
-        this.username = value
+    onChangeUserName:function(username){
+      this.current.username = username
     },
-    setPassword: function(value) {
-        this.password = value
+    onChangePassword:function(password){
+      this.current.password = password
     },
     validate: function(vnode){
-      if(vnode.state.current.username === "" ||  vnode.state.current.username === undefined || vnode.state.current.password === "" ||  vnode.state.current.password === undefined){
+      if(this.current.username === "" ||  this.current.username === undefined || this.current.password === "" ||  this.current.password === undefined){
         return;
       }else{
-        //vnode.state.current.onLogin ? DatabaseAPI.login(vnode) : DatabaseAPI.register(vnode)
+        this.current.onLogin ?
+        DatabaseAPI.login(this.current.username, this.current.password).then(() => {
+          if(data.status === 200){
+            m.route.set("/connected", {connected:true});
+          }
+        }) :
+        DatabaseAPI.register(this.current.username, this.current.password).then(() => {
+          if(data.status === 200){
+            m.route.set("/connected", {connected:true});
+          }
+        });
       }
     },
-    activeLogin:(vnode) => {
-      vnode.state.current.onLogin = true;
-      vnode.state.current.onRegister = false;
+    activeLogin:function(){
+      this.current.onLogin = true;
+      this.current.onRegister = false;
     },
-    activeRegister:(vnode) => {
-      vnode.state.current.onLogin = false;
-      vnode.state.current.onRegister = true;
+    activeRegister:function(){
+      this.current.onLogin = false;
+      this.current.onRegister = true;
     },
-    desactiveLoginRegister:(vnode) => {
-      vnode.state.current.onLogin = false;
-      vnode.state.current.onRegister = false;
+    desactiveLoginRegister:function(){
+      this.current.onLogin = false;
+      this.current.onRegister = false;
     },
+
     view: function(vnode) {
       return m("#connectionContainer", [
         m("#connectionLine", [
           vnode.state.current.onLogin ?
           m("div.connectionTopContainer", [
             m(".connectionTop", "Login"),
-            m(Quit, {desactiveLoginRegister:function(){vnode.state.desactiveLoginRegister(vnode)}}, "quit")
+            m(Quit, {desactiveLoginRegister:function(){vnode.state.desactiveLoginRegister()}}, "quit")
           ])
           :
           !vnode.state.current.onRegister && m("div.connectionButton #login", {
             onclick:function(){
-              vnode.state.activeLogin(vnode)
+              vnode.state.activeLogin()
             }
           }, "Login"),
           vnode.state.current.onRegister ?
           m("div.connectionTopContainer", [
             m(".connectionTop", "Register"),
-            m(Quit, {desactiveLoginRegister:function(){vnode.state.desactiveLoginRegister(vnode)}}, "quit")
+            m(Quit, {desactiveLoginRegister:function(){vnode.state.desactiveLoginRegister()}}, "quit")
           ])
           :
           !vnode.state.current.onLogin && m("div.connectionButton #register", {
             onclick:function(){
-              vnode.state.activeRegister(vnode)
+              vnode.state.activeRegister()
             }
           },"Register"),
         ]),
         vnode.state.current.onLogin || vnode.state.current.onRegister ?
-        m(ConnectionInput,  {style:{width:"100%"}, validate:function(){vnode.state.validate()}}, vnode.state.current.username):
-        m("div.connectionButton #withoutAccount", {style:{width:"100%"}, onclick:function(){console.log(vnode.state.current.onRegister)}}, "Continue without account")
+          m(ConnectionInput,  {
+            style:{width:"100%"},
+            validate:function(){vnode.state.validate()},
+            onChangeUserName:function(u){vnode.state.onChangeUserName(u)},
+            onChangePassword:function(p){vnode.state.onChangePassword(p)},
+          }, vnode.state.current.username)
+        :
+          m("div.connectionButton #withoutAccount", {style:{width:"100%"}, onclick:function(){console.log(vnode.state.current.onRegister)}}, "Continue without account")
 
 
       ])
@@ -83,6 +100,18 @@ var Quit = {
     },
     "quit")
   }
+}
+
+var ConnectionInput = {
+    view: function(vnode) {
+      return m("#connectionWindow", [
+          m("#connectionInput", [
+            m("input.input[type=text][placeholder=User Name]", {oninput:function(e){vnode.attrs.onChangeUserName(e.target.value)}}),
+            m("input.input[type=text][placeholder=Password]", {oninput:function(e){vnode.attrs.onChangePassword(e.target.value)}}),
+          ]),
+          m(".loginValidate",{onclick:function(){vnode.attrs.validate()}}, "Validate"),
+        ])
+    }
 }
 
 module.exports = NoAccount;
