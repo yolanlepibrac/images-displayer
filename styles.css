@@ -1,0 +1,32 @@
+body{
+  margin:0;
+  padding :0px;
+}
+
+.header {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  color:white;
+  font-size: 20px;
+  width:100vw;
+  margin: 0;
+  padding: 0;
+}
+
+.button {
+    background: #eee;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    color: #333;
+    display: inline-block;
+    margin: 0 0 10px;
+    padding: 10px 15px;
+    text-decoration: none;
+}
+
+.button:hover {
+    opacity: 0.8;
+}

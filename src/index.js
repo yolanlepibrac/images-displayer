@@ -1,2 +1,4 @@
 import m from "mithril";
-m.render(document.body, "hello world");
+var App = require("./views/App")
+
+m.mount(document.body, App)
