@@ -36,8 +36,8 @@ module.exports = {
       return m("#gridContainer", [
         State.connected &&
         m(".menuContainer", [
-            m(".homeMenuButton", m(m.route.Link, {href: "/home"}, "Home")),
-            m(".favouritesMenuButton", m(m.route.Link, {href: "/favourites"}, "Favourites"))
+            m(m.route.Link, {href: "/home"}, m(".menuButton#homeMenuButton", "Home")),
+            m(m.route.Link, {href: "/favourites"}, m(".menuButton#favouritesMenuButton", "Favourites"))
           ]
         ),
         m(m.route.Link, {href: "/connexion"},
@@ -47,13 +47,13 @@ module.exports = {
           }
         }, State.connected?"Disconnect":"Sign in"),),
         m(".gallery#homeGallery",
-          State.imagesArray.map((imageData,index) => { return m(ClickableImage, {key:index, imageData:imageData}) })
+          State.imagesArray.map((imageData,index) => { return m(RandomImage, {key:index, imageData:imageData}) })
         )
       ])
     }
 }
 
-var ClickableImage = {
+var RandomImage = {
   oninit:function(vnode){
     vnode.state.current.src[vnode.attrs.key] = "./src/assets/heartGrey.png";
   },
@@ -80,10 +80,7 @@ var ClickableImage = {
       }
     },[m("img.imageCard", {
         src:vnode.attrs.imageData.src,
-        onclick:() => {
-
-        }},
-      ),
+      }),
       m("div.textCard", vnode.attrs.imageData.data.author),
       m("img.likeButton",{
         src:State.favourites.includes(vnode.attrs.imageData.data) ? "./src/assets/heartBlack.png" : this.current.src[vnode.attrs.key],

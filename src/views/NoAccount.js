@@ -43,6 +43,7 @@ var NoAccount = {
       .then((response) => {
         State.connected = isConnected;
         State.imagesArray = GridElementsConstructor.createElementForGrid(response.data);
+        console.log(response.data)
         m.route.set("/home");
       })
       .catch((error) => console.error(error))
