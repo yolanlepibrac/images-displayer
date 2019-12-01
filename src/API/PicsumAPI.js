@@ -10,7 +10,7 @@ const headers = {
 
 module.exports = {
     getImagesFromApi : function(page) {
-      let url = "https://picsum.photos/v2/list?page="+ page + "&limit=20";
+      let url = "https://picsum.photos/v2/list?page="+ page + "&limit=50";
       return axios.get(url ,{},{headers: headers})
 
     },

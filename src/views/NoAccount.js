@@ -3,6 +3,7 @@ var m = require("mithril")
 var DatabaseAPI = require("../API/DatabaseAPI");
 var State = require("./Global").state;
 var PicsumAPI = require("../API/PicsumAPI");
+var GridElementsConstructor = require("../utils/GridElementsConstructor")
 
 var NoAccount = {
     current : {
@@ -41,7 +42,7 @@ var NoAccount = {
       PicsumAPI.getImagesFromApi()
       .then((response) => {
         State.connected = isConnected;
-        State.imagesArray = response.data;
+        State.imagesArray = GridElementsConstructor.createElementForGrid(response.data);
         m.route.set("/home");
       })
       .catch((error) => console.error(error))
