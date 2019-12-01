@@ -6,13 +6,12 @@ const headers = {
   'Accept': 'application/json',
 }
 
-const burl = `https://picsum.photos/v2/list?page=2&limit=100`
 
-//const burl = "http://localhost:8000/"
 
 module.exports = {
-    getImagesFromApi : function() {
-      return axios.get(burl ,{},{headers: headers})
+    getImagesFromApi : function(page) {
+      let url = "https://picsum.photos/v2/list?page="+ page + "&limit=20";
+      return axios.get(url ,{},{headers: headers})
 
     },
 }
