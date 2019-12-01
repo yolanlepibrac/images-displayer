@@ -27,16 +27,20 @@ var NoAccount = {
         DatabaseAPI.login(this.current.username, this.current.password).then((data) => {
           if(data.status === 200){
             State.connected = true;
-            m.route.set("/connected", {connected:true});
+            m.route.set("/home");
           }
         }) :
         DatabaseAPI.signup(this.current.username, this.current.password).then((data) => {
           if(data.status === 200){
             State.connected = true;
-            m.route.set("/connected", {connected:true});
+            m.route.set("/home");
           }
         });
       }
+    },
+    connectWithoutAccount:function(){
+      State.connected = false;
+      m.route.set("/home");
     },
     activeLogin:function(){
       this.current.onLogin = true;
@@ -80,12 +84,14 @@ var NoAccount = {
         vnode.state.current.onLogin || vnode.state.current.onRegister ?
           m(ConnectionInput,  {
             style:{width:"100%"},
+            username : vnode.state.current.username,
+            password : vnode.state.current.password,
             validate:function(){vnode.state.validate()},
             onChangeUserName:function(u){vnode.state.onChangeUserName(u)},
             onChangePassword:function(p){vnode.state.onChangePassword(p)},
           }, vnode.state.current.username)
         :
-          m("div.connectionButton #withoutAccount", {style:{width:"100%"}, onclick:function(){console.log(vnode.state.current.onRegister)}}, "Continue without account")
+          m("div.connectionButton #withoutAccount", {style:{width:"100%"}, onclick:function(){vnode.state.connectWithoutAccount()}}, "Continue without account")
 
 
       ])
@@ -110,8 +116,8 @@ var ConnectionInput = {
     view: function(vnode) {
       return m("#connectionWindow", [
           m("#connectionInput", [
-            m("input.input[type=text][placeholder=User Name]", {oninput:function(e){vnode.attrs.onChangeUserName(e.target.value)}}),
-            m("input.input[type=text][placeholder=Password]", {oninput:function(e){vnode.attrs.onChangePassword(e.target.value)}}),
+            m("input.input[type=text][placeholder=User Name]", {value:vnode.attrs.username, oninput:function(e){vnode.attrs.onChangeUserName(e.target.value)}}),
+            m("input.input[type=text][placeholder=Password]", {value:vnode.attrs.password, oninput:function(e){vnode.attrs.onChangePassword(e.target.value)}}),
           ]),
           m(".loginValidate",{onclick:function(){vnode.attrs.validate()}}, "Validate"),
         ])
