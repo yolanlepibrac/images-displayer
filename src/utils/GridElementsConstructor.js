@@ -13,7 +13,7 @@ module.exports = {
       let position = this.setPositionInGrid(area)
       let src = this.setReduceImageUrl(res, area)
       newImagesArray.push({
-        data : data,
+        data : data[i],
         area,
         position,
         src,
@@ -32,9 +32,9 @@ module.exports = {
         Math.random()<0.5 ? [2,1] : [4,2] :
       ratio < (1+1.5)/2 ?
         [3,2] :
-      ratio < (1.5+2)/2 ?
+      ratio < (1.5+2.25)/2 ?
         Math.random()<0.8 ? [1,1] : [2,2] :
-      ratio < (2+2.5)/2 ?
+      ratio < (2.25+2.75)/2 ?
         Math.random()<0.5 ? [1,2] : [2,4] :
       [1,3];
       return area

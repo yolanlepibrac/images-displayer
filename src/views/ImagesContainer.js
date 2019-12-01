@@ -5,26 +5,32 @@ var State = require("./Global").state;
 var Constantes = require("./Global").constantes;
 var GridElementsConstructor = require("../utils/GridElementsConstructor")
 
+var canUpdate = true;
+
+$(window).scroll(function() {
+     if($(window).scrollTop() + 2*$(window).height() > $(document).height()) {
+       if(canUpdate){
+         canUpdate = false;
+         setTimeout(function(){ canUpdate = true; }, 1000)
+
+         PicsumAPI.getImagesFromApi(State.page)
+         .then((response) => {
+           let newImagesArray = GridElementsConstructor.createElementForGrid(response.data);
+           State.imagesArray = State.imagesArray.concat(newImagesArray);
+           State.page = State.page+1;
+           console.log(State.imagesArray)
+           m.redraw()
+         })
+         .catch((error) => console.error(error))
+       }
+     }
+});
+
 module.exports = {
-    current : {
-      imagesArray : [],
-      page : 1,
-    },
-    getImagesFromApi:function(page){
-      PicsumAPI.getImagesFromApi(this.current.page)
-      .then((response) => {
-        let newImagesArray = GridElementsConstructor.createElementForGrid(response.data);
-        State.imagesArray = State.imagesArray.concat(newImagesArray);
-        this.current.page = this.current.page+1;
-        console.log(State.imagesArray)
-        m.redraw()
-      })
-      .catch((error) => console.error(error))
-    },
+
     view: function(vnode) {
       return m("#gridContainer", [
         m(m.route.Link, {href: "/connexion"}, m(".disconnect", "Disconnect"),),
-        m(".getPic", {onclick: () => {this.getImagesFromApi(this.current.page)}}, "get Picture"),
         m(".gallery#homeGallery",
           State.imagesArray.map((imageData,index) => { return m(ClickableImage, {imageData:imageData, index:index}) })
         )
@@ -33,6 +39,9 @@ module.exports = {
 }
 
 var ClickableImage = {
+  oninit:function(vnode){
+    console.log(vnode.attrs)
+  },
   view:function(vnode){
     return m(".imageContainer", {
       key: vnode.attrs.index,

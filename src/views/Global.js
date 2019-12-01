@@ -8,6 +8,7 @@ exports.state = {
     firstFreePosition:0,
     filledArea:{},
   },
+  page:1,
 }
 
 exports.constantes = {
