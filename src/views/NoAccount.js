@@ -2,6 +2,7 @@
 var m = require("mithril")
 var DatabaseAPI = require("../API/DatabaseAPI");
 var State = require("./Global").state;
+var PicsumAPI = require("../API/PicsumAPI");
 
 var NoAccount = {
     current : {
@@ -18,7 +19,7 @@ var NoAccount = {
     onChangePassword:function(password){
       this.current.password = password
     },
-    validate: function(vnode){
+    validate:function(){
       console.log(this.current.username, this.current.password)
       if(this.current.username === "" ||  this.current.username === undefined || this.current.password === "" ||  this.current.password === undefined){
         return;
@@ -26,21 +27,27 @@ var NoAccount = {
         this.current.onLogin ?
         DatabaseAPI.login(this.current.username, this.current.password).then((data) => {
           if(data.status === 200){
-            State.connected = true;
-            m.route.set("/home");
+            this.getImagesFromApi(true)
           }
         }) :
         DatabaseAPI.signup(this.current.username, this.current.password).then((data) => {
           if(data.status === 200){
-            State.connected = true;
-            m.route.set("/home");
+            this.getImagesFromApi(true)
           }
         });
       }
     },
-    connectWithoutAccount:function(){
-      State.connected = false;
-      m.route.set("/home");
+    getImagesFromApi:(isConnected) => {
+      PicsumAPI.getImagesFromApi()
+      .then((response) => {
+        State.connected = isConnected;
+        State.imagesArray = response.data;
+        m.route.set("/home");
+      })
+      .catch((error) => console.error(error))
+    },
+    connectWithoutAccount:(vnode) => {
+      vnode.state.getImagesFromApi(false)
     },
     activeLogin:function(){
       this.current.onLogin = true;
@@ -58,40 +65,40 @@ var NoAccount = {
     view: function(vnode) {
       return m("#connectionContainer", [
         m("#connectionLine", [
-          vnode.state.current.onLogin ?
+          this.current.onLogin ?
           m("div.connectionTopContainer", [
             m(".connectionTop", "Login"),
-            m(Quit, {desactiveLoginRegister:function(){vnode.state.desactiveLoginRegister()}}, "quit")
+            m(Quit, {desactiveLoginRegister:() => {this.desactiveLoginRegister()}}, "quit")
           ])
           :
-          !vnode.state.current.onRegister && m("div.connectionButton #login", {
-            onclick:function(){
-              vnode.state.activeLogin()
+          !this.current.onRegister && m("div.connectionButton #login", {
+            onclick:() => {
+              this.activeLogin()
             }
           }, "Login"),
-          vnode.state.current.onRegister ?
+          this.current.onRegister ?
           m("div.connectionTopContainer", [
             m(".connectionTop", "Register"),
-            m(Quit, {desactiveLoginRegister:function(){vnode.state.desactiveLoginRegister()}}, "quit")
+            m(Quit, {desactiveLoginRegister:() => {this.desactiveLoginRegister()}}, "quit")
           ])
           :
-          !vnode.state.current.onLogin && m("div.connectionButton #register", {
-            onclick:function(){
-              vnode.state.activeRegister()
+          !this.current.onLogin && m("div.connectionButton #register", {
+            onclick:() => {
+              this.activeRegister()
             }
           },"Register"),
         ]),
-        vnode.state.current.onLogin || vnode.state.current.onRegister ?
+        this.current.onLogin || this.current.onRegister ?
           m(ConnectionInput,  {
             style:{width:"100%"},
-            username : vnode.state.current.username,
-            password : vnode.state.current.password,
-            validate:function(){vnode.state.validate()},
-            onChangeUserName:function(u){vnode.state.onChangeUserName(u)},
-            onChangePassword:function(p){vnode.state.onChangePassword(p)},
-          }, vnode.state.current.username)
+            username : this.current.username,
+            password : this.current.password,
+            validate:() => {this.validate()},
+            onChangeUserName:(u) => {this.onChangeUserName(u)},
+            onChangePassword:(p) => {this.onChangePassword(p)},
+          }, this.current.username)
         :
-          m("div.connectionButton #withoutAccount", {style:{width:"100%"}, onclick:function(){vnode.state.connectWithoutAccount()}}, "Continue without account")
+          m("div.connectionButton #withoutAccount", {style:{width:"100%"}, onclick:() => {this.connectWithoutAccount(vnode)}}, "Continue without account")
 
 
       ])
