@@ -5,6 +5,7 @@ var Constantes = require("../views/Global").constantes;
 
 module.exports = {
   createElementForGrid:function(data){
+    console.log(State.grid.filledArea);
     let newImagesArray = [];
     for (var i = 0; i < data.length; i++) {
       let url = data[i].download_url;
@@ -42,7 +43,7 @@ module.exports = {
   setPositionInGrid:function(area){
     //on store la premiere position de la grille pour pas reparcourir
     let areaWasPosed = false
-    let i = State.grid.firstFreePosition
+    let i = 0;
     let positionOfArea = []
     while(areaWasPosed === false){
       for (var j = 0; j < Constantes.gridLength; j++) {

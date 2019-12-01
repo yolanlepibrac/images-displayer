@@ -101,7 +101,6 @@ var NoAccount = {
         :
           m("div.connectionButton #withoutAccount", {style:{width:"100%"}, onclick:() => {this.connectWithoutAccount(vnode)}}, "Continue without account")
 
-
       ])
     }
 }

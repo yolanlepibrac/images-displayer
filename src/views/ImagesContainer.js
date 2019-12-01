@@ -2,6 +2,7 @@
 var m = require("mithril");
 var PicsumAPI = require("../API/PicsumAPI");
 var State = require("./Global").state;
+var DefaultState = require("./Global").defaultState
 var Constantes = require("./Global").constantes;
 var GridElementsConstructor = require("../utils/GridElementsConstructor")
 
@@ -27,12 +28,26 @@ $(window).scroll(function() {
 });
 
 module.exports = {
-
+    disconnect:function(){
+      State.grid.firstFreePosition = 0;
+      State.grid.filledArea = {};
+    },
     view: function(vnode) {
       return m("#gridContainer", [
-        m(m.route.Link, {href: "/connexion"}, m(".disconnect", "Disconnect"),),
+        State.connected &&
+        m(".menuContainer", [
+            m(".homeMenuButton", m(m.route.Link, {href: "/home"}, "Home")),
+            m(".favouritesMenuButton", m(m.route.Link, {href: "/favourites"}, "Favourites"))
+          ]
+        ),
+        m(m.route.Link, {href: "/connexion"},
+        m(".disconnect", {
+          onclick:()=>{
+            this.disconnect()
+          }
+        }, State.connected?"Disconnect":"Sign in"),),
         m(".gallery#homeGallery",
-          State.imagesArray.map((imageData,index) => { return m(ClickableImage, {imageData:imageData, index:index}) })
+          State.imagesArray.map((imageData,index) => { return m(ClickableImage, {key:index, imageData:imageData}) })
         )
       ])
     }
@@ -40,11 +55,23 @@ module.exports = {
 
 var ClickableImage = {
   oninit:function(vnode){
-    console.log(vnode.attrs)
+    vnode.state.current.src[vnode.attrs.key] = "./src/assets/heartGrey.png";
+  },
+  current:{
+    src : {},
+  },
+  setHoverLike:function(key){
+    this.current.src[key] = "./src/assets/heartBlack.png";
+  },
+  setOutLike:function(key){
+    this.current.src[key] = "./src/assets/heartGrey.png";
+  },
+  toggleLike:function(imageDatas){
+    State.favourites.includes(imageDatas) ? State.favourites.splice(State.favourites.indexOf(imageDatas),1) : State.favourites.push(imageDatas)
+
   },
   view:function(vnode){
     return m(".imageContainer", {
-      key: vnode.attrs.index,
       style:{
         "grid-row-start": vnode.attrs.imageData.position[0]+1,
         "grid-row-end":vnode.attrs.imageData.position[0]+1 + vnode.attrs.imageData.area[0],
@@ -57,7 +84,13 @@ var ClickableImage = {
 
         }},
       ),
-      m("div.textCard", vnode.attrs.imageData.data.author)]
+      m("div.textCard", vnode.attrs.imageData.data.author),
+      m("img.likeButton",{
+        src:State.favourites.includes(vnode.attrs.imageData.data) ? "./src/assets/heartBlack.png" : this.current.src[vnode.attrs.key],
+        onmouseover:() => {this.setHoverLike(vnode.attrs.key)},
+        onmouseout:() => {this.setOutLike(vnode.attrs.key)},
+        onclick:() => {this.toggleLike(vnode.attrs.imageData.data)}
+      }, "Like")]
     )
   }
 }
