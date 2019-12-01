@@ -11,7 +11,8 @@ module.exports = {
       PicsumAPI.getImagesFromApi()
       .then((response) => {
         console.log(response.data)
-        State.imagesArray.concat(response.data)
+        State.imagesArray = State.imagesArray.concat(response.data);
+        m.redraw()
       })
       .catch((error) => console.error(error))
     },
@@ -20,7 +21,7 @@ module.exports = {
         m(m.route.Link, {href: "/connexion"}, m(".disconnect", "Disconnect"),),
         m(".getPic", {onclick: () => {this.getImagesFromApi()}}, "get Picture"),
         m(".gallery#homeGallery",
-          State.imagesArray.map((imageData) => { return m(ClickableImage, {data:imageData}) })
+          State.imagesArray.map((imageData,index) => { return m(ClickableImage, {data:imageData, index:index}) })
         )
       ])
     }
@@ -42,13 +43,15 @@ var ClickableImage = {
     return newUrl
   },
   view:function(vnode){
-    return m(".imageContainer",
-      m("img.imageCard", {
+    return m(".imageContainer", {
+      style:{
+        "grid-column-start": 1,
+        "grid-column-end": 3,
+        "grid-row-start": 1,
+        "grid-row-end": 3,
+      }
+    },m("img.imageCard", {
         src:this.reduceImageSize(vnode.attrs.data.download_url),
-        style:{
-          gridColumn: 1 / 3,
-          gridRow: 1,
-        },
         onclick:() => {
 
         }},
