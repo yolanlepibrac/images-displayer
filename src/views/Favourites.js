@@ -7,23 +7,9 @@ var GridElementsConstructor = require("../utils/GridElementsConstructor")
 
 
 module.exports = {
-    disconnect:function(){
-      State.grid.firstFreePosition = 0;
-      State.grid.filledArea = {};
-    },
     view: function(vnode) {
       return m("#gridContainer", [
         State.connected &&
-        m(".menuContainer", [
-          m(m.route.Link, {href: "/home"}, m(".menuButton#homeMenuButton", "Home")),
-          m(m.route.Link, {href: "/favourites"}, m(".menuButton#favouritesMenuButton", "Favourites"))
-        ]),
-        m(m.route.Link, {href: "/connexion"},
-        m(".disconnect", {
-          onclick:()=>{
-            this.disconnect()
-          }
-        }, State.connected?"Disconnect":"Sign in"),),
         State.favourites.length>0 ? m(".gallery#favouriteGallery",
             State.favourites.map((imageData,index) => { return m(FavouriteImage, {key:index, imageData:{data:imageData}}) })
           )

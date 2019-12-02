@@ -3,7 +3,8 @@ var m = require("mithril")
 var DatabaseAPI = require("../API/DatabaseAPI");
 var State = require("./Global").state;
 var PicsumAPI = require("../API/PicsumAPI");
-var GridElementsConstructor = require("../utils/GridElementsConstructor")
+var GridElementsConstructor = require("../utils/GridElementsConstructor");
+
 
 var NoAccount = {
     current : {
@@ -13,6 +14,8 @@ var NoAccount = {
       widthRegister : "50%",
       onLogin:false,
       onRegister:false,
+      errorMessage : "",
+      displayLoading:false,
     },
     onChangeUserName:function(username){
       this.current.username = username
@@ -23,30 +26,51 @@ var NoAccount = {
     validate:function(){
       console.log(this.current.username, this.current.password)
       if(this.current.username === "" ||  this.current.username === undefined || this.current.password === "" ||  this.current.password === undefined){
+        this.current.errorMessage = "Password and UserName must be filled";
         return;
       }else{
+        this.current.displayLoading = true;
         this.current.onLogin ?
         DatabaseAPI.login(this.current.username, this.current.password).then((data) => {
           if(data.status === 200){
             this.getImagesFromApi(true)
+          }else{
+            this.current.errorMessage = "Impossible to login, check you UserName and Password";
           }
+          m.redraw()
+        }).catch((error) => {
+          if(error.response.status === 401){
+            console.log("impossible to connec")
+            this.current.errorMessage = "Impossible to login, check you UserName and Password";
+          }else{
+            this.current.errorMessage = "Impossible to login, must be an error with server";
+          }
+          m.redraw()
+        }).then(()=> {
+          this.current.displayLoading = false;
         }) :
         DatabaseAPI.signup(this.current.username, this.current.password).then((data) => {
           if(data.status === 200){
             this.getImagesFromApi(true)
+          }else{
+            this.current.errorMessage = "Impossible to register, try an other UserName";
           }
+          m.redraw()
+        }).catch((error)=>{
+          if(error.response.status === 204){
+             this.current.errorMessage = "Impossible to register, this UserName is already taken";
+           }else{
+             this.current.errorMessage = "Impossible to register, must be an error with server";
+          }
+          m.redraw()
+        }).then(()=> {
+          this.current.displayLoading = false;
         });
       }
     },
     getImagesFromApi:(isConnected) => {
-      PicsumAPI.getImagesFromApi()
-      .then((response) => {
         State.connected = isConnected;
-        State.imagesArray = GridElementsConstructor.createElementForGrid(response.data);
-        console.log(response.data)
         m.route.set("/home");
-      })
-      .catch((error) => console.error(error))
     },
     connectWithoutAccount:(vnode) => {
       vnode.state.getImagesFromApi(false)
@@ -60,13 +84,17 @@ var NoAccount = {
       this.current.onRegister = true;
     },
     desactiveLoginRegister:function(){
+      this.current.errorMessage = "";
       this.current.onLogin = false;
       this.current.onRegister = false;
     },
 
     view: function(vnode) {
-      return m("#connectionContainer", [
+      return this.current.displayLoading ? m(".spinner")
+      :
+      m("#connectionContainer", [
         m("#connectionLine", [
+          m("#errorConnection", this.current.errorMessage),
           this.current.onLogin ?
           m("div.connectionTopContainer", [
             m(".connectionTop", "Login"),
@@ -124,8 +152,10 @@ var ConnectionInput = {
     view: function(vnode) {
       return m("#connectionWindow", [
           m("#connectionInput", [
-            m("input.input[type=text][placeholder=User Name]", {value:vnode.attrs.username, oninput:function(e){vnode.attrs.onChangeUserName(e.target.value)}}),
-            m("input.input[type=text][placeholder=Password]", {value:vnode.attrs.password, oninput:function(e){vnode.attrs.onChangePassword(e.target.value)}}),
+            m("input.input[type=text][placeholder=User Name][autofocus]",
+            {value:vnode.attrs.username, oninput:function(e){vnode.attrs.onChangeUserName(e.target.value)}}),
+            m("input.input[type=text][placeholder=Password]",
+            {value:vnode.attrs.password, oninput:function(e){vnode.attrs.onChangePassword(e.target.value)}}),
           ]),
           m(".loginValidate",{onclick:function(){vnode.attrs.validate()}}, "Validate"),
         ])

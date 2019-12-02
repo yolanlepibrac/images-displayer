@@ -10,9 +10,9 @@ module.exports = {
     for (var i = 0; i < data.length; i++) {
       let url = data[i].download_url;
       let res = url.split("/");
-      let area = this.defineArea(res[res.length-2],res[res.length-1])
-      let position = this.setPositionInGrid(area)
-      let src = this.setReduceImageUrl(res, area)
+      let area = this.defineArea(res[res.length-2],res[res.length-1]);
+      let position = this.setPositionInGrid(area);
+      let src = this.setReduceImageUrl(res, area);
       newImagesArray.push({
         data : data[i],
         area,

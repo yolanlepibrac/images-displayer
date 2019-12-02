@@ -30,12 +30,16 @@ body{
 
 #appContainer{
   width:100%;
-  height: 100%;
+  height: calc(100vh - 51px);
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 
+}
+
+#homeGallery{
+  overflow:auto;
 }
 
 #connectionContainer{
@@ -308,6 +312,7 @@ body{
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s;
+  cursor: pointer;
 }
 
 .menuButton:hover{
@@ -320,6 +325,8 @@ body{
   top:0px;
 }
 
+
+
 #favouritesMenuButton{
   left:175px;
   top:0px;;
@@ -331,6 +338,30 @@ body{
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+#errorConnection{
+  display: flex;
+  width:100%;
+  position: absolute;
+  top:25vh;
+  display: flex;
+  justify-content: center;
+  color: white;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #000000;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 
