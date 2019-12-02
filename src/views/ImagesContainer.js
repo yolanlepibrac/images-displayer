@@ -25,10 +25,7 @@ var setImagesToState = function(){
 var canUpdate = true;
 var setScrollToGallery = function(){
   $("#homeGallery").on('scroll', function () {
-    console.log($("#homeGallery").scrollTop())
-    console.log($(window).innerHeight())
-    console.log($("#homeGallery").height())
-    if($("#homeGallery").scrollTop() + $(window).innerHeight() > $("#homeGallery").height()) {
+    if($("#homeGallery").scrollTop() + 2*$("#homeGallery").innerHeight() > $("#homeGallery").prop('scrollHeight')) {
       if(canUpdate){
         canUpdate = false;
         setTimeout(function(){ canUpdate = true; }, 1000)
@@ -65,7 +62,7 @@ module.exports = {
       State.grid.filledArea = {};
     },
     view: function(vnode) {
-      return m("#gridContainer", [
+      return m("#imagesContainer", [
         State.connected &&
         m(".menuContainer", [
             m(".menuButton#homeMenuButton", {onclick:()=>{this.onNavigateHome()}}, "Home"),
