@@ -21,16 +21,16 @@ module.exports = {
 
 var FavouriteImage = {
   oninit:function(vnode){
-    vnode.state.current.src[vnode.attrs.key] = "./src/assets/heartGrey.png";
+    vnode.state.current.src[vnode.attrs.key] = "./src/assets/heartBlack.png";
   },
   current:{
     src : {},
   },
   setHoverLike:function(key){
-    this.current.src[key] = "./src/assets/heartBlack.png";
+    this.current.src[key] = "./src/assets/cross.png";
   },
   setOutLike:function(key){
-    this.current.src[key] = "./src/assets/heartGrey.png";
+    this.current.src[key] = "./src/assets/heartBlack.png";
   },
   toggleLike:function(imageDatas){
     State.favourites.splice(State.favourites.indexOf(imageDatas),1)
@@ -42,7 +42,7 @@ var FavouriteImage = {
       }),
       m("div.textCard", vnode.attrs.imageData.data.author),
       m("img.likeButton",{
-        src:State.favourites.includes(vnode.attrs.imageData.data) ? "./src/assets/heartBlack.png" : this.current.src[vnode.attrs.key],
+        src:this.current.src[vnode.attrs.key],
         onmouseover:() => {this.setHoverLike(vnode.attrs.key)},
         onmouseout:() => {this.setOutLike(vnode.attrs.key)},
         onclick:() => {this.toggleLike(vnode.attrs.imageData.data)}

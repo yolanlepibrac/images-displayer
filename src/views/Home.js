@@ -7,12 +7,37 @@ var Constantes = require("./Global").constantes;
 var GridElementsConstructor = require("../utils/GridElementsConstructor");
 var ImagesContainer = require("./ImagesContainer")
 
-var canUpdate = true;
 var homeGallery = document.getElementById('homeGallery');
 
 
+var setImagesToState = function(){
+    PicsumAPI.getImagesFromApi(State.page)
+    .then((response) => {
+      let newImagesArray = GridElementsConstructor.createElementForGrid(response.data);
+      State.imagesArray = State.imagesArray.concat(newImagesArray);
+      State.page = State.page+1;
+      m.redraw()
+    })
+    .catch((error) => console.error(error))
+}
+
+var canUpdate = true;
+var setScrollToGallery = function(){
+  $("#homeGallery").on('scroll', function () {
+    if($("#homeGallery").scrollTop() + 2*$("#homeGallery").innerHeight() > $("#homeGallery").prop('scrollHeight')) {
+      if(canUpdate){
+        canUpdate = false;
+        setTimeout(function(){ canUpdate = true; }, 1000)
+        setImagesToState()
+      }
+    }
+  });
+}
 
 var Home = {
+  oncreate:function(){
+    setScrollToGallery()
+  },
     oninit:function(){
       PicsumAPI.getImagesFromApi()
       .then((response) => {
@@ -20,10 +45,8 @@ var Home = {
         m.redraw()
       })
       .catch((error) => console.error(error));
-
-
     },
-    
+
     view: function(vnode) {
       return m(".gallery#homeGallery",
           State.imagesArray.map((imageData,index) => { return m(RandomImage, {key:index, imageData:imageData}) })
@@ -47,7 +70,7 @@ var RandomImage = {
     this.current.src[key] = "./src/assets/heartGrey.png";
   },
   toggleLike:function(imageDatas){
-    State.favourites.includes(imageDatas) ? State.favourites.splice(State.favourites.indexOf(imageDatas),1) : State.favourites.push(imageDatas)
+    State.favourites.map((favourite)=>favourite.id).includes(imageDatas.id) ? State.favourites.splice(State.favourites.map((favourite)=>favourite.id).indexOf(imageDatas.id),1) : State.favourites.push(imageDatas)
 
   },
   view:function(vnode){
@@ -63,7 +86,7 @@ var RandomImage = {
       }),
       m("div.textCard", vnode.attrs.imageData.data.author),
       m("img.likeButton",{
-        src:State.favourites.includes(vnode.attrs.imageData.data) ? "./src/assets/heartBlack.png" : this.current.src[vnode.attrs.key],
+        src:State.favourites.map((favourite)=>favourite.id).includes(vnode.attrs.imageData.data.id) ? "./src/assets/heartBlack.png" : this.current.src[vnode.attrs.key],
         onmouseover:() => {this.setHoverLike(vnode.attrs.key)},
         onmouseout:() => {this.setOutLike(vnode.attrs.key)},
         onclick:() => {this.toggleLike(vnode.attrs.imageData.data)}
