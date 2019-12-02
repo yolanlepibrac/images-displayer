@@ -24,7 +24,6 @@ var NoAccount = {
       this.current.password = password
     },
     validate:function(){
-      console.log(this.current.username, this.current.password)
       if(this.current.username === "" ||  this.current.username === undefined || this.current.password === "" ||  this.current.password === undefined){
         this.current.errorMessage = "Password and UserName must be filled";
         return;
@@ -32,48 +31,49 @@ var NoAccount = {
         this.current.displayLoading = true;
         this.current.onLogin ?
         DatabaseAPI.login(this.current.username, this.current.password).then((data) => {
+          console.log(data)
           if(data.status === 200){
-            this.getImagesFromApi(true)
+            State.favourites = data.data.userData.images
+            State.username = data.data.userData.username
+            this.navigateToHome(true)
           }else{
-            this.current.errorMessage = "Impossible to login, check you UserName and Password";
+            this.setError("Impossible to login, check you UserName and Password");
           }
-          m.redraw()
         }).catch((error) => {
           if(error.response.status === 401){
-            console.log("impossible to connec")
-            this.current.errorMessage = "Impossible to login, check you UserName and Password";
-          }else{
-            this.current.errorMessage = "Impossible to login, must be an error with server";
+            this.setError("Impossible to login, check you UserName and Password");
           }
-          m.redraw()
-        }).then(()=> {
-          this.current.displayLoading = false;
+        }).catch((error)=> {
+          this.setError("Impossible to login, must be an error with server")
         }) :
         DatabaseAPI.signup(this.current.username, this.current.password).then((data) => {
           if(data.status === 200){
-            this.getImagesFromApi(true)
+            State.username = data.data.userData.username
+            this.navigateToHome(true)
           }else{
-            this.current.errorMessage = "Impossible to register, try an other UserName";
+            this.setError("Impossible to register, try an other UserName");
           }
-          m.redraw()
         }).catch((error)=>{
           if(error.response.status === 204){
-             this.current.errorMessage = "Impossible to register, this UserName is already taken";
-           }else{
-             this.current.errorMessage = "Impossible to register, must be an error with server";
-          }
-          m.redraw()
-        }).then(()=> {
-          this.current.displayLoading = false;
+             this.setError("Impossible to register, this UserName is already taken");
+           }
+        }).catch((error)=> {
+          this.setError("Impossible to login, must be an error with server");
         });
       }
     },
-    getImagesFromApi:(isConnected) => {
+    setError:function(message){
+      this.current.errorMessage = message;
+      this.current.displayLoading = false;
+      m.redraw()
+    },
+    navigateToHome:function(isConnected){
+        this.current.displayLoading = false;
         State.connected = isConnected;
         m.route.set("/home");
     },
     connectWithoutAccount:(vnode) => {
-      vnode.state.getImagesFromApi(false)
+      vnode.state.navigateToHome(false)
     },
     activeLogin:function(){
       this.current.onLogin = true;

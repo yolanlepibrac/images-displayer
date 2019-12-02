@@ -16,10 +16,7 @@ module.exports = {
     signup : function(username,password){
         return axios.post(burl + '/user/signup',{'username':username,'password':password},{headers: headers})
     },
-    addPicture: function() {
-        return axios.post(burl + '/user/addPicture',{},{headers: headers})
-    },
-    deletePicture: function(){
-        return axios.post(burl + '/user/deletePicture',{},{headers: headers})
+    togglePicture: function(username, picture) {
+        return axios.post(burl + '/user/togglePicture',{'username':username, 'picture':picture},{headers: headers})
     },
 }

@@ -5,7 +5,6 @@ var Constantes = require("../views/Global").constantes;
 
 module.exports = {
   createElementForGrid:function(data){
-    console.log(State.grid.filledArea);
     let newImagesArray = [];
     for (var i = 0; i < data.length; i++) {
       let url = data[i].download_url;

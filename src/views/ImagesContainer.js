@@ -13,13 +13,15 @@ var Favourites = require("./Favourites")
 
 
 module.exports = {
-  
+
     current:{
       displayFavourites:false
     },
     disconnect:function(){
       this.reinitialisationOfGrid();
-      State.connected=false
+      State.favourites = [];
+      State.username = "";
+      State.connected=false;
     },
     onNavigateHome:function(){
       this.current.displayFavourites = false;

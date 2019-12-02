@@ -9,6 +9,7 @@ exports.state = {
   },
   page:1,
   favourites:[],
+  username : "",
 }
 
 exports.constantes = {
