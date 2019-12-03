@@ -14,6 +14,7 @@ module.exports = {
       displayFavourites:false
     },
     disconnect:function(){
+      this.current.displayFavourites = false;
       this.reinitialisationOfGrid();
       State.favourites = [];
       State.username = "";

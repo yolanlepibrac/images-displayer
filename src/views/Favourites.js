@@ -44,7 +44,8 @@ var FavouriteImage = {
   view:function(vnode){
     return m(".favouriteImageContainer",
       [m("img.imageCard", {
-        src:GridElementsConstructor.setReduceImageUrl(vnode.attrs.imageData.data.download_url.split("/"),[1,1]),
+        src:vnode.attrs.imageData.data.download_url ? GridElementsConstructor.setReduceImageUrl(vnode.attrs.imageData.data.download_url.split("/"),[1,1]) :
+        ""
       }),
       m("div.textCard", vnode.attrs.imageData.data.author),
       m("img.likeButton",{
