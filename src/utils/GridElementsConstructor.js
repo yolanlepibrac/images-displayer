@@ -82,6 +82,18 @@ module.exports = {
     res[res.length-1] = Math.round(parseInt(res[res.length-1], 10)/10*areaSize);
     res[res.length-2] = Math.round(parseInt(res[res.length-2], 10)/10*areaSize);
 
+    // Security to not overpass 5000/5000 size
+    if(res[res.length-1] > 5000 || res[res.length-2] > 5000){
+      let max = Math.max(res[res.length-1], res[res.length-2])
+      if(max === res[res.length-1]){
+        res[res.length-1] = res[res.length-1]*5000/res[res.length-1]
+        res[res.length-2] = res[res.length-2]*5000/res[res.length-1]
+      }else{
+        res[res.length-1] = res[res.length-1]*5000/res[res.length-2]
+        res[res.length-2] = res[res.length-2]*5000/res[res.length-2]
+      }
+    }
+
     let newSrc = "";
     for (var i = 0; i < res.length; i++) {
       if(i === res.length -1){
@@ -90,6 +102,21 @@ module.exports = {
         newSrc = newSrc + res[i] + "/"
       }
     }
+    // Check if Images can be load or throw an error
+    var checkIfImagesCanBeLoad = new Promise(function(resolve, reject){
+      fetch(newSrc).then((response) => {
+        if(response.status === 200){
+          console.log(response)
+          resolve(response)
+        }else{
+          console.log("error", response)
+          reject(response)
+        }
+      })
+    }).catch((error)=> {
+      console.log(error)
+    })
+
     return newSrc
   }
 }
