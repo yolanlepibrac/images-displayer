@@ -17,13 +17,3 @@ exports.constantes = {
   gridLength : 5,
 
 }
-
-exports.defaultState = {
-  imagesArray : [],
-  connected : false,
-  grid :{
-    firstFreePosition:0,
-    filledArea:{},
-  },
-  page:1,
-}

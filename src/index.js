@@ -7,15 +7,8 @@ var Home = require("./views/Home")
 
 
 
-
 m.mount(document.body, App)
 m.route(document.getElementById('appContainer'), "/connexion", {
     "/connexion": NoAccount,
     "/home" : ImagesContainer,
 })
-/*
-m.route(document.getElementById('gridContainer'), "/home", {
-    "/home" : Home,
-    "/favourites" : Favourites,
-})
-*/

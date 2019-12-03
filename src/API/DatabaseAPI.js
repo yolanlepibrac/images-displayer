@@ -7,7 +7,6 @@ const headers = {
 }
 
 const burl = "https://images-displayer.herokuapp.com"
-//const burl = "http://localhost:8000/"
 
 module.exports = {
     login : function(username,password) {

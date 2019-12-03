@@ -2,13 +2,9 @@
 var m = require("mithril");
 var PicsumAPI = require("../API/PicsumAPI");
 var State = require("./Global").state;
-var DefaultState = require("./Global").defaultState
-var Constantes = require("./Global").constantes;
 var GridElementsConstructor = require("../utils/GridElementsConstructor");
 var ImagesContainer = require("./ImagesContainer")
 var DatabaseAPI = require("../API/DatabaseAPI");
-
-var homeGallery = document.getElementById('homeGallery');
 
 
 var setImagesToState = function(){
@@ -73,6 +69,8 @@ var RandomImage = {
   toggleLike:function(imageDatas){
     DatabaseAPI.togglePicture(State.username, imageDatas).then((result)=> {
       console.log(result)
+    }).catch((error)=> {
+      console.log(error)
     })
     State.favourites.map((favourite)=>favourite.id).includes(imageDatas.id) ?
       function(){
@@ -86,6 +84,7 @@ var RandomImage = {
   view:function(vnode){
     return m(".imageContainer", {
       style:{
+        // Position on the grid
         "grid-row-start": vnode.attrs.imageData.position[0]+1,
         "grid-row-end":vnode.attrs.imageData.position[0]+1 + vnode.attrs.imageData.area[0],
         "grid-column-start": vnode.attrs.imageData.position[1]+1,

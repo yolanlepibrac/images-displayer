@@ -5,6 +5,7 @@ var Constantes = require("../views/Global").constantes;
 
 module.exports = {
   createElementForGrid:function(data){
+    // Create object containing image data, its area on screen, its position in the grid, and a optimize source (depending on its dimensions)
     let newImagesArray = [];
     for (var i = 0; i < data.length; i++) {
       let url = data[i].download_url;
@@ -40,16 +41,21 @@ module.exports = {
       return area
   },
   setPositionInGrid:function(area){
-    //on store la premiere position de la grille pour pas reparcourir
+    // Set the position of images in the grid
     let areaWasPosed = false
     let i = 0;
     let positionOfArea = []
+    // loop on all position of the grid, until the image can be display
+    // -> Possible Optimization : store the first line index of free position in grid -> to not loop on all the grid after some images are set
     while(areaWasPosed === false){
       for (var j = 0; j < Constantes.gridLength; j++) {
         let areaCanBePosedAtPosition = true;
+        // loop on every position of the grid that the image will fill
         for (var posX = i; posX < i+area[0]; posX++) {
           for (var posY = j; posY < j+area[1]; posY++) {
+            // State.grid.filledArea store the "already taken position" in an object
             if(State.grid.filledArea["[" + posX + "," + posY +"]"] === true || j+area[1]>Constantes.gridLength){
+              // Check if position is free
               areaCanBePosedAtPosition = false;
             }
           }
@@ -58,13 +64,13 @@ module.exports = {
           positionOfArea = [i,j]
           for (var posX = i; posX < i+area[0]; posX++) {
             for (var posY = j; posY < j+area[1]; posY++) {
+              // Store positions of image in the "already taken position" object
               State.grid.filledArea["[" + posX + "," + posY +"]"] = true
             }
           }
           areaWasPosed = true;
           break;
         }
-
       }
       i++
     }
@@ -72,7 +78,7 @@ module.exports = {
   },
   setReduceImageUrl:function(res, area){
     let areaSize = area[0]*area[1];
-    //Division of image size by 10 - then multiply by the surface it will take on screen
+    //Division of image size by 10 (to optimize loading) - then multiply by the surface it will take on screen (to not loose to much quality for large images)
     res[res.length-1] = Math.round(parseInt(res[res.length-1], 10)/10*areaSize);
     res[res.length-2] = Math.round(parseInt(res[res.length-2], 10)/10*areaSize);
 

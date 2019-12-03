@@ -3,6 +3,7 @@ var m = require("mithril");
 var State = require("./Global").state;
 var Constantes = require("./Global").constantes;
 var GridElementsConstructor = require("../utils/GridElementsConstructor")
+var DatabaseAPI = require("../API/DatabaseAPI");
 
 
 
@@ -33,6 +34,11 @@ var FavouriteImage = {
     this.current.src[key] = "./src/assets/heartBlack.png";
   },
   toggleLike:function(imageDatas){
+    DatabaseAPI.togglePicture(State.username, imageDatas).then((result)=> {
+      console.log(result)
+    }).catch((error)=> {
+      console.log(error)
+    })
     State.favourites.splice(State.favourites.indexOf(imageDatas),1)
   },
   view:function(vnode){

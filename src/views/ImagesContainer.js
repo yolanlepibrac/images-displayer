@@ -1,10 +1,6 @@
 
 var m = require("mithril");
-var PicsumAPI = require("../API/PicsumAPI");
 var State = require("./Global").state;
-var DefaultState = require("./Global").defaultState
-var Constantes = require("./Global").constantes;
-var GridElementsConstructor = require("../utils/GridElementsConstructor")
 var Home = require("./Home")
 var Favourites = require("./Favourites")
 
