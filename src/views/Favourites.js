@@ -10,9 +10,9 @@ var DatabaseAPI = require("../API/DatabaseAPI");
 module.exports = {
     view: function(vnode) {
       return m("#gridContainer", [
-        State.connected &&
-        State.favourites.length>0 ? m(".gallery#favouriteGallery",
-            State.favourites.map((imageData,index) => { return m(FavouriteImage, {key:index, imageData:{data:imageData}}) })
+        vnode.attrs.globalState.connected &&
+        vnode.attrs.globalState.favourites.length>0 ? m(".gallery#favouriteGallery",
+            vnode.attrs.globalState.favourites.map((imageData,index) => { return m(FavouriteImage, {key:index, imageData:{data:imageData}}) })
           )
           :
           m(".noFavouritesMessage", "You do not have favourites yet")

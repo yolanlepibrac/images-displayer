@@ -35,7 +35,7 @@ var Home = {
   oncreate:function(){
     setScrollToGallery()
   },
-    oninit:function(){
+    oninit:function(vnode){
       PicsumAPI.getImagesFromApi()
       .then((response) => {
         State.imagesArray = GridElementsConstructor.createElementForGrid(response.data);
@@ -46,7 +46,7 @@ var Home = {
 
     view: function(vnode) {
       return m(".gallery#homeGallery",
-          State.imagesArray.map((imageData,index) => { return m(RandomImage, {key:index, imageData:imageData}) })
+          vnode.attrs.globalState.imagesArray.map((imageData,index) => { return m(RandomImage, {key:index, imageData:imageData}) })
         )
     }
 }

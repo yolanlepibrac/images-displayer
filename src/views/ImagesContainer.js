@@ -13,7 +13,7 @@ module.exports = {
       this.current.displayFavourites=false
     },
     current:{
-      displayFavourites:false
+      displayFavourites:false,
     },
     disconnect:function(){
       this.current.displayFavourites = false;
@@ -51,7 +51,7 @@ module.exports = {
             this.disconnect()
           }
         }, State.connected?"Disconnect":"Sign in"),),
-        this.current.displayFavourites ? m(Favourites) : m(Home)
+        this.current.displayFavourites ? m(Favourites, {globalState : State}) : m(Home, {globalState : State})
       ])
     }
 }

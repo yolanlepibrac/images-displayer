@@ -5,7 +5,7 @@ var o = require("ospec")
 var ImagesContainer = require("../views/ImagesContainer.js")
 
 o.spec("ImagesContainer", function() {
-    var out = mq(ImagesContainer, {State:{connected:true}})
+    var out = mq(ImagesContainer)
 
     o("id is correct", function() {
         o(out.rootNode.attrs.id).equals("imagesContainer")
