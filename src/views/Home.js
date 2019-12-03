@@ -85,10 +85,10 @@ var RandomImage = {
     return m(".imageContainer", {
       style:{
         // Position on the grid
-        "grid-row-start": vnode.attrs.imageData.position[0]+1,
-        "grid-row-end":vnode.attrs.imageData.position[0]+1 + vnode.attrs.imageData.area[0],
-        "grid-column-start": vnode.attrs.imageData.position[1]+1,
-        "grid-column-end": vnode.attrs.imageData.position[1]+1 + vnode.attrs.imageData.area[1],
+        "grid-row-start":     vnode.attrs.imageData.position && vnode.attrs.imageData.position[0]+1,
+        "grid-row-end":       vnode.attrs.imageData.position && vnode.attrs.imageData.position[0]+1 + vnode.attrs.imageData.area[0],
+        "grid-column-start":  vnode.attrs.imageData.position && vnode.attrs.imageData.position[1]+1,
+        "grid-column-end":    vnode.attrs.imageData.position && vnode.attrs.imageData.position[1]+1 + vnode.attrs.imageData.area[1],
       }
     },[m("img.imageCard", {
         src:vnode.attrs.imageData.src,

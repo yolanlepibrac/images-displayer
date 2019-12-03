@@ -9,7 +9,9 @@ var Favourites = require("./Favourites")
 
 
 module.exports = {
-
+    oninit:function(){
+      this.current.displayFavourites=false
+    },
     current:{
       displayFavourites:false
     },
@@ -31,6 +33,9 @@ module.exports = {
     reinitialisationOfGrid:function(){
       State.grid.firstFreePosition = 0;
       State.grid.filledArea = {};
+    },
+    toggleDisconnect:function(){
+      State.connected = !State.connected
     },
     view: function(vnode) {
       return m("#imagesContainer", [

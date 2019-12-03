@@ -5,9 +5,17 @@ var Constantes = require("../views/Global").constantes;
 
 module.exports = {
   createElementForGrid:function(data){
+
+    if(data === undefined || data === null){
+      return
+    }
+
     // Create object containing image data, its area on screen, its position in the grid, and a optimize source (depending on its dimensions)
     let newImagesArray = [];
     for (var i = 0; i < data.length; i++) {
+
+      if(!data[i].download_url || typeof(data[i].download_url) !== "string"){return}
+
       let url = data[i].download_url;
       let res = url.split("/");
       let area = this.defineArea(res[res.length-2],res[res.length-1]);
@@ -23,6 +31,7 @@ module.exports = {
     return(newImagesArray)
   },
   defineArea:function(width, height){
+
     let ratio = width/height;
     // Defined the area the image will take, from its dimenstion
     // Grid is 1.5 width for 1 height
@@ -41,6 +50,13 @@ module.exports = {
       return area
   },
   setPositionInGrid:function(area){
+    
+    if(area === undefined || area === null){
+      return;
+    }else if(typeof(area[0]) === "bigint" || typeof(area[1]) === "bigint"){
+      return;
+    }
+
     // Set the position of images in the grid
     let areaWasPosed = false
     let i = 0;
@@ -77,6 +93,9 @@ module.exports = {
     return positionOfArea;
   },
   setReduceImageUrl:function(res, area){
+
+    if(res===undefined  || res===null || area===undefined  || area===null){return}
+
     let areaSize = area[0]*area[1];
     //Division of image size by 10 (to optimize loading) - then multiply by the surface it will take on screen (to not loose to much quality for large images)
     res[res.length-1] = Math.round(parseInt(res[res.length-1], 10)/10*areaSize);
@@ -104,6 +123,9 @@ module.exports = {
     }
     // Check if Images can be load or throw an error
     var checkIfImagesCanBeLoad = new Promise(function(resolve, reject){
+
+      if (!window.fetch){return}
+
       fetch(newSrc).then((response) => {
         if(response.status === 200){
           console.log(response)
