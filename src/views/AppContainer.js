@@ -3,7 +3,7 @@ var m = require("mithril")
 var NoAccount = require("./NoAccount")
 
 module.exports = {
-    current : "foo",
+    current : {},
     view: function(vnode) {
       return m("#appContainer")
     }

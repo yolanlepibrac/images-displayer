@@ -5,8 +5,22 @@ var o = require("ospec")
 var AppContainer = require("../views/AppContainer.js")
 
 o.spec("AppContainer", function() {
-    o("things are working", function() {
-        var out = mq(AppContainer, {text: "What a wonderful day to be alive!"})
-        out.should.contain("day")
+    var out = mq(AppContainer)
+
+    o("display free text component", function() {
+        out.should.contain("")
     })
+
+    o("display div inside component", function() {
+        out.should.have('div')
+    })
+
+    o("component does not have span", function() {
+        out.should.not.have('span')
+    })
+
+    o("component is appContainer", function() {
+        out.should.have('#appContainer')
+    })
+
 })
