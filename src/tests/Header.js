@@ -15,7 +15,7 @@ o.spec("Header normal", function() {
       o(out.vnode.attrs.style.backgroundColor).equals("black")
     })
 
-    o("display right color", function() {
+    o("display right height", function() {
       o(out.vnode.attrs.style.height).equals("50px")
     })
 
