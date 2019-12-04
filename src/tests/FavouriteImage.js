@@ -45,6 +45,7 @@ o.spec("FavouriteImage work if download_url empty or null", function() {
     var out4 = mq(FavouriteImage, {imageData:{data:{id:"string", download_url:0}}})
 
     o("download_url work if empty or null", function() {
+      // background image and like image
         out.should.have(2, "img")
         out1.should.have(2, "img")
         out2.should.have(2, "img")

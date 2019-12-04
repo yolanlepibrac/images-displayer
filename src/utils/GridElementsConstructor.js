@@ -50,7 +50,7 @@ module.exports = {
       return area
   },
   setPositionInGrid:function(area){
-    
+
     if(area === undefined || area === null){
       return;
     }else if(typeof(area[0]) === "bigint" || typeof(area[1]) === "bigint"){
@@ -128,7 +128,7 @@ module.exports = {
 
       fetch(newSrc).then((response) => {
         if(response.status === 200){
-          console.log(response)
+          //console.log(response)
           resolve(response)
         }else{
           console.log("error", response)

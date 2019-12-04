@@ -20,9 +20,9 @@ module.exports = {
   },
   toggleLike:function(imageDatas){
     DatabaseAPI.togglePicture(State.username, imageDatas).then((result)=> {
-      console.log(result)
+      //console.log(result)
     }).catch((error)=> {
-      console.log(error)
+      //console.log(error)
     })
     State.favourites.splice(State.favourites.indexOf(imageDatas),1)
   },
