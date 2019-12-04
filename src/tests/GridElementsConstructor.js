@@ -54,6 +54,25 @@ o.spec("createElementForGrid", function() {
 })
 
 
+o.spec("createElementForGrid value", function() {
+    var out = mq(GridElementsConstructor)
+
+    o("createElementForGrid works on wrong array", function() {
+        o(out.rootNode.createElementForGrid([{
+          download_url:"string/string/500/400"
+        }])).deepEquals([ {
+          data: {
+            download_url: 'string/string/500/400' },
+            area: [ 1, 1 ],
+            position: [ 0, 3 ],
+            src: 'string/string/50/40'
+          }
+        ])
+    })
+})
+
+
+
 
 o.spec("defineArea", function() {
     var out = mq(GridElementsConstructor)
@@ -104,6 +123,30 @@ o.spec("defineArea", function() {
     })
 })
 
+o.spec("defineArea value", function() {
+    var out = mq(GridElementsConstructor)
+
+    o("defineArea return undefined for 0 0", function() {
+        o(out.rootNode.defineArea(0,0)).equals(undefined)
+    })
+
+    o("defineArea return [3,2] for 1 1", function() {
+        o(out.rootNode.defineArea(1,1)).deepEquals ([3,2])
+    })
+
+    o("defineArea return undefined for 0 1", function() {
+        o(out.rootNode.defineArea(0,1)).equals(undefined)
+    })
+
+    o("defineArea return undefined for 1 0", function() {
+        o(out.rootNode.defineArea(1,0)).equals(undefined)
+    })
+
+    o("defineArea return [3,2] for 10 10", function() {
+        o(out.rootNode.defineArea(10,10)).deepEquals ([3,2])
+    })
+})
+
 
 o.spec("setPositionInGrid", function() {
     var out = mq(GridElementsConstructor)
@@ -150,6 +193,32 @@ o.spec("setPositionInGrid", function() {
         out.rootNode.setPositionInGrid([Math.PI, Math.PI])
     })
 })
+
+o.spec("setPositionInGrid value", function() {
+    var out = mq(GridElementsConstructor)
+
+    o("setPositionInGrid return [0,0] for [0,0]", function() {
+        o(out.rootNode.setPositionInGrid([0,0])).deepEquals([0,0])
+    })
+})
+
+
+o.spec("setPositionInGrid value [10,10]", function() {
+  var out = mq(GridElementsConstructor)
+
+    o("setPositionInGrid return [0,0] for [10,10]", function() {
+        o(out.rootNode.setPositionInGrid([10,10])).deepEquals(undefined)
+    })
+})
+
+o.spec("setPositionInGrid value [-1,-1]", function() {
+  var out = mq(GridElementsConstructor)
+
+    o("setPositionInGrid return [0,0] for [-1,-1]", function() {
+        o(out.rootNode.setPositionInGrid([-1,-1])).deepEquals(undefined)
+    })
+})
+
 
 o.spec("setReduceImageUrl", function() {
     var out = mq(GridElementsConstructor)
@@ -202,4 +271,47 @@ o.spec("setReduceImageUrl", function() {
     o("setReduceImageUrl works on other numer", function() {
         out.rootNode.setReduceImageUrl([Math.PI], Math.PI)
     })
+})
+
+
+o.spec("setReduceImageUrl value", function() {
+  var out = mq(GridElementsConstructor)
+
+    o("setPositionInGrid return '0/0' for [1,1] [0,0]", function() {
+        o(out.rootNode.setReduceImageUrl([1,1], [0,0])).deepEquals("0/0")
+    })
+
+    o("setPositionInGrid return '0/0' for ['1','1'] [0,0]", function() {
+        o(out.rootNode.setReduceImageUrl(["1","1"], [0,0])).deepEquals("0/0")
+    })
+
+    o("setPositionInGrid return '0/0' for ['1','1'], [1,1]", function() {
+        o(out.rootNode.setReduceImageUrl(["1","1"], [1,1])).deepEquals("0/0")
+    })
+
+    o("setPositionInGrid return '0/0' for ['2','2'], [1,1]", function() {
+        o(out.rootNode.setReduceImageUrl(["2","2"], [1,1])).deepEquals("0/0")
+    })
+
+    o("setPositionInGrid return '1/1' for ['10','10'], [1,1]", function() {
+        o(out.rootNode.setReduceImageUrl(["10","10"], [1,1])).deepEquals("1/1")
+    })
+
+    o("setPositionInGrid return '2/2' for ['20','20'], [1,1]", function() {
+        o(out.rootNode.setReduceImageUrl(["20","20"], [1,1])).deepEquals("2/2")
+    })
+
+    o("setPositionInGrid return 'string/2/2' for ['string','20','20'], [1,1]", function() {
+        o(out.rootNode.setReduceImageUrl(["string","20","20"], [1,1])).deepEquals("string/2/2")
+    })
+
+    o("setPositionInGrid return '4/4' for ['20','20'], [2,1]", function() {
+        o(out.rootNode.setReduceImageUrl(["20","20"], [2,1])).deepEquals("4/4")
+    })
+
+    o("setPositionInGrid return '8/8' for ['20','20'], [2,2]", function() {
+        o(out.rootNode.setReduceImageUrl(["20","20"], [2,2])).deepEquals("8/8")
+    })
+
+
 })

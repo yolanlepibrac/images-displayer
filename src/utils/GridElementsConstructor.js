@@ -32,6 +32,8 @@ module.exports = {
   },
   defineArea:function(width, height){
 
+    if(width===0 || height===0){return undefined}
+
     let ratio = width/height;
     // Defined the area the image will take, from its dimenstion
     // Grid is 1.5 width for 1 height
@@ -52,9 +54,11 @@ module.exports = {
   setPositionInGrid:function(area){
 
     if(area === undefined || area === null){
-      return;
+      return undefined;
     }else if(typeof(area[0]) === "bigint" || typeof(area[1]) === "bigint"){
-      return;
+      return undefined;
+    }else if(area[0] < 0 || area[1] < 0 || area[1] > Constantes.gridLength){
+      return undefined;
     }
 
     // Set the position of images in the grid
