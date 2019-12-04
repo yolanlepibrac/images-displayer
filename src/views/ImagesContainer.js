@@ -6,8 +6,6 @@ var Favourites = require("./Favourites")
 
 
 
-
-
 module.exports = {
     oninit:function(){
       this.current.displayFavourites=false

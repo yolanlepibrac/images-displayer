@@ -7,10 +7,6 @@ var AppContainer = require("../views/AppContainer.js")
 o.spec("AppContainer", function() {
     var out = mq(AppContainer)
 
-    o("display free text component", function() {
-        out.should.contain("")
-    })
-
     o("display div inside component", function() {
         out.should.have('div')
     })

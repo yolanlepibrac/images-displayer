@@ -1,7 +1,6 @@
 // src/views/App.js
 
 var m = require("mithril")
-var State = require("./Global").state
 var Constantes = require("./Global").constantes
 var Header = require("./Header")
 var AppContainer = require("./AppContainer")

@@ -96,7 +96,6 @@ var NoAccount = {
       this.current.onLogin = false;
       this.current.onRegister = false;
     },
-
     view: function(vnode) {
       return this.current.displayLoading ? m(".spinner")
       :

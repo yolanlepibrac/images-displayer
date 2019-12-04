@@ -13,7 +13,6 @@ o.spec("NoAccount", function() {
         o(out.rootNode.attrs.id).equals("connectionContainer")
     })
 
-
     o("state is well initialized", function() {
         o(out.vnode.state.current.username).equals("")
         o(out.vnode.state.current.password).equals("")

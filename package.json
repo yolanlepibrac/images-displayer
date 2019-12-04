@@ -16,7 +16,8 @@
   },
   "scripts": {
     "test": "ospec --require ./test-setup.js",
-    "start": "webpack src/index.js --output bin/app.js -d --watch"
+    "start": "webpack src/index.js --output bin/app.js -d --watch",
+    "build": "webpack src/index.js --output bin/app.js -p"
   },
   "repository": {
     "type": "git",

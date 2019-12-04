@@ -72,8 +72,6 @@ o.spec("createElementForGrid value", function() {
 })
 
 
-
-
 o.spec("defineArea", function() {
     var out = mq(GridElementsConstructor)
 
