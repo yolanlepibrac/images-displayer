@@ -10,17 +10,25 @@ var NoAccount = {
     current : {
       username: "",
       password: "",
-      widthLogin : "50%",
-      widthRegister : "50%",
       onLogin:false,
       onRegister:false,
       errorMessage : "",
       displayLoading:false,
     },
     onChangeUserName:function(username){
+      if(typeof(username) === "number"){
+        username = username.toString(10)
+      }else if(typeof(username) !== "string"){
+        username = ""
+      }
       this.current.username = username
     },
     onChangePassword:function(password){
+      if(typeof(password) === "number"){
+        password = password.toString(10)
+      }else if(typeof(password) !== "string"){
+        password = ""
+      }
       this.current.password = password
     },
     validate:function(){
