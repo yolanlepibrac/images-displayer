@@ -63,11 +63,31 @@ module.exports = {
 
     // Set the position of images in the grid
     let areaWasPosed = false
-    let i = 0;
+    let i = State.grid.firstFreePositionLine;
     let positionOfArea = []
     // loop on all position of the grid, until the image can be display
-    // -> Possible Optimization : store the first line index of free position in grid -> to not loop on all the grid after some images are set
+
+
+    let firstFreePositionLineFound = false
+    // -> Store the first line index of free position in grid -> to not loop on all the grid after some images are set
+    while(firstFreePositionLineFound === false){
+      let lineIsFull = true;
+      for (var j = 0; j < Constantes.gridLength; j++) {
+        if(!State.grid.filledArea["[" + i + "," + j +"]"]){
+          lineIsFull = false
+          firstFreePositionLineFound = true
+        }
+      }
+      if(lineIsFull === true){
+        State.grid.firstFreePositionLine++;
+        i = State.grid.firstFreePositionLine
+      }
+    }
+
+    // Search the first position in grid where the image can be put
+    // loop on lines
     while(areaWasPosed === false){
+      // loop on columns
       for (var j = 0; j < Constantes.gridLength; j++) {
         let areaCanBePosedAtPosition = true;
         // loop on every position of the grid that the image will fill
@@ -75,11 +95,12 @@ module.exports = {
           for (var posY = j; posY < j+area[1]; posY++) {
             // State.grid.filledArea store the "already taken position" in an object
             if(State.grid.filledArea["[" + posX + "," + posY +"]"] === true || j+area[1]>Constantes.gridLength){
-              // Check if position is free
+              // Check if position is taken
               areaCanBePosedAtPosition = false;
             }
           }
         }
+        //  if the image can be put
         if(areaCanBePosedAtPosition === true){
           positionOfArea = [i,j]
           for (var posX = i; posX < i+area[0]; posX++) {

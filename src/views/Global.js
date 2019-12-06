@@ -4,7 +4,7 @@ exports.state = {
   imagesArray : [],
   connected : false,
   grid :{
-    firstFreePosition:0,
+    firstFreePositionLine:0,
     filledArea:{},
   },
   page:1,
