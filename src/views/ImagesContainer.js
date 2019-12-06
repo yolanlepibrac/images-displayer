@@ -29,7 +29,7 @@ module.exports = {
       this.reinitialisationOfGrid()
     },
     reinitialisationOfGrid:function(){
-      State.grid.firstFreePosition = 0;
+      State.grid.firstFreePositionLine = 0;
       State.grid.filledArea = {};
     },
     toggleDisconnect:function(){
